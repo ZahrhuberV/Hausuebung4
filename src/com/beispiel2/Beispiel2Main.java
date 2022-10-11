@@ -12,6 +12,9 @@ public class Beispiel2Main {
         Scanner s = new Scanner(System.in);
         int n;
         int border;
+        int borderChunk;
+        int sumAll = 0;
+
         System.out.println("n>");
         n = s.nextInt();
         for (int i = 1; i <= n; i++) {
@@ -26,22 +29,23 @@ public class Beispiel2Main {
         } else {
             pool = Executors.newFixedThreadPool(n/100 +1);
             border = n/100+1;
-        }
 
+        }
 
         final List<SumTask> callables = new ArrayList<>();
 
         for (int i = 0; i < border; i++) {
-            List<Integer> chunk = numbers.subList(i * 100, (i+1) * 100);
+            borderChunk = (i+1) * 100;
+            if(n/100 == i){
+                borderChunk = n%100 + i*100;
+            }
+            List<Integer> chunk = numbers.subList(i * 100, borderChunk);
             callables.add(new SumTask(chunk));
         }
-
-        int sumAll = 0;
-
         try {
             for (final Future<Integer> future :
                     pool.invokeAll(callables)) {
-                System.out.println(future.get());
+                System.out.println("SingleChunk:" + future.get());
                 sumAll = sumAll + future.get();
             }
         } catch (ExecutionException | InterruptedException ex) { }
