@@ -18,7 +18,7 @@ public class ReadFile {
                    try {
                        numbers.add(Integer.parseInt(parts[i]));
                    } catch (NumberFormatException nfe){
-                       System.out.println("Not a Number");
+                       continue;
                    }
                }
            }
